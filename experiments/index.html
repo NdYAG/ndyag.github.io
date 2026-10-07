@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLSL Experiments</title>
+    <style>
+      :root {
+        --bg: #0f0f14;
+        --card: #17171f;
+        --card-hover: #1f1f2b;
+        --text: #e6e6ef;
+        --muted: #8a8a9c;
+        --accent: #6ea8fe;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, sans-serif;
+        min-height: 100vh;
+        padding: 48px 24px;
+      }
+      header { max-width: 1080px; margin: 0 auto 40px; }
+      header h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; }
+      header p { color: var(--muted); margin-top: 8px; font-size: 15px; }
+      .grid {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        background: var(--card);
+        overflow: hidden;
+        border: 1px solid #23232f;
+        transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      }
+      .card:hover {
+        background: var(--card-hover);
+        border-color: #34344a;
+        transform: translateY(-3px);
+      }
+      .thumb {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #1d1d28;
+        color: #3a3a4d;
+        font-weight: 650;
+        font-size: 18px;
+        letter-spacing: .02em;
+      }
+      .thumb img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .meta { padding: 16px 18px; }
+      .meta h2 { font-size: 16px; font-weight: 600; }
+      .meta p { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>GLSL Experiments</h1>
+      <p>A playground where I try out ideas.</p>
+    </header>
+    <main class="grid">
+      <a class="card" href="./trail/">
+        <div class="thumb"><img src="./trail/thumb.png" alt="" onerror="this.remove()"><span>Trail</span></div>
+        <div class="meta"><h2>Trail</h2><p>Tapered line drawing</p></div>
+      </a>
+      <a class="card" href="./album-blurtwist-dual-kawase-blur/">
+        <div class="thumb"><img src="./album-blurtwist-dual-kawase-blur/thumb.png" alt="" onerror="this.remove()"><span>Album Blur</span></div>
+        <div class="meta"><h2>Album Blur (Apple Music inspired)</h2><p>Twist + dual Kawase blur</p></div>
+      </a>
+      <a class="card" href="./geniehorizontal-squeeze-vertical-slide/">
+        <div class="thumb"><img src="./geniehorizontal-squeeze-vertical-slide/thumb.png" alt="" onerror="this.remove()"><span>Genie</span></div>
+        <div class="meta"><h2>Genie</h2><p>Horizontal squeeze + vertical slide</p></div>
+      </a>
+      <a class="card" href="./lenschromatic-aberration/">
+        <div class="thumb"><img src="./lenschromatic-aberration/thumb.png" alt="" onerror="this.remove()"><span>Lens · CA</span></div>
+        <div class="meta"><h2>Lens (Chromatic Aberration)</h2><p>Refraction on an icosahedron</p></div>
+      </a>
+      <a class="card" href="./lensray-march-version/">
+        <div class="thumb"><img src="./lensray-march-version/thumb.png" alt="" onerror="this.remove()"><span>Lens · Ray March</span></div>
+        <div class="meta"><h2>Lens (Ray Marching)</h2><p>Ray-marched refractive lens</p></div>
+      </a>
+    </main>
+  </body>
+</html>
