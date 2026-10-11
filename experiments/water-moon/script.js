@@ -174,10 +174,12 @@ const createLighting = (scene) => {
   });
 };
 
-const createMoon = async () => {
+const createMoon = () => {
   // texture
   const textureLoader = new TextureLoader();
-  const texture = await textureLoader.load(MOON_TEXTURE);
+  let resolveReady;
+  const ready = new Promise((resolve) => { resolveReady = resolve; });
+  const texture = textureLoader.load(MOON_TEXTURE, resolveReady);
   texture.colorSpace = NoColorSpace;
   texture.wrapS = RepeatWrapping;
   texture.wrapT = ClampToEdgeWrapping;
@@ -200,6 +202,7 @@ const createMoon = async () => {
   const mesh = new Mesh(geometry, material);
   return { 
     mesh,
+    ready,
     faceCamera(camera) { mesh.quaternion.copy(camera.quaternion); }
   };
 };
@@ -230,25 +233,23 @@ const createPostprocessing = ({ renderer, scene, camera, onResize }) => {
   };
 };
 
-const init = async () => {
-  const app = createApp();
-  const { renderer, scene, camera, run, onResize } = app;
-  const water = createWater(app);
-  createLighting(scene);
-  scene.add(water.mesh);
-  const moon = await createMoon();
-  moon.mesh.layers.enable(1);
-  scene.add(moon.mesh);
-  moon.mesh.position.set(0, .8, -1.0);
+const app = createApp();
+const { renderer, scene, camera, run, onResize } = app;
+const water = createWater(app);
+createLighting(scene);
+scene.add(water.mesh);
+const moon = createMoon();
+moon.mesh.layers.enable(1);
+scene.add(moon.mesh);
+moon.mesh.position.set(0, .8, -1.0);
 
-  const post = createPostprocessing(app);
+const post = createPostprocessing(app);
 
+moon.ready.then(() => {
   run((time) => {
     moon.faceCamera(camera);
     water.update(time);
   }, () => {
     post.render(0.2);
   });
-};
-
-init();
+});
