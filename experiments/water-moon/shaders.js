@@ -152,6 +152,8 @@ void main() {
 export const fragment_moon = `
 #define PI 3.141592653589793
 uniform sampler2D uLunarMap;
+uniform float uPhase;
+uniform float uRoll;
 varying vec2 vUv;
 
 void main() {
@@ -161,8 +163,13 @@ void main() {
   float edgeAA = clamp(fwidth(rr), 0.002, 0.15);
   float disk   = 1.0 - smoothstep(1.0 - edgeAA, 1.0 + edgeAA, rr);
 
-  vec3 L = vec3(0., 0., 1.);
+  vec3 L = vec3(sin(uPhase) * cos(uRoll),
+                sin(uPhase) * sin(uRoll),
+                cos(uPhase));
   float mu = dot(sphereN,L);
+
+  float phaseAA   = clamp(fwidth(mu) * 0.65, 0.002, 0.15);
+  float phaseMask = smoothstep(-phaseAA, phaseAA, mu);
 
   // full moon
   vec2 tuv = vec2(
@@ -175,7 +182,7 @@ void main() {
   float relief = 0.77+0.23*pow(max(mu,0.0),0.45);
 
   vec3 color = gold * relief * 1.7;
-  float alpha = disk;
+  float alpha = disk * phaseMask;
 
   if (alpha < 0.001) discard;
   gl_FragColor = vec4(color, alpha);
