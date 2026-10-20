@@ -29,9 +29,9 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { vertex_water, fragment_water, vertex_moon, fragment_moon } from './shaders.js';
+import { vertex_water, fragment_water, vertex_moon, fragment_moon } from './shaders';
 
-const MOON_TEXTURE = './textures/moon-texture.png';
+const MOON_TEXTURE = 'https://i.postimg.cc/3NSNJ2Lp/moon-texture.png';
 
 const createApp = () => {
   const host = document.querySelector('#viewport');
@@ -177,9 +177,7 @@ const createLighting = (scene) => {
 const createMoon = () => {
   // texture
   const textureLoader = new TextureLoader();
-  let resolveReady;
-  const ready = new Promise((resolve) => { resolveReady = resolve; });
-  const texture = textureLoader.load(MOON_TEXTURE, resolveReady);
+  const texture = textureLoader.load(MOON_TEXTURE);
   texture.colorSpace = NoColorSpace;
   texture.wrapS = RepeatWrapping;
   texture.wrapT = ClampToEdgeWrapping;
@@ -190,6 +188,8 @@ const createMoon = () => {
   const geometry = new PlaneGeometry(2, 2);
   const uniforms = {
     uLunarMap: { value: texture },
+    uPhase: { value: 0 },
+    uRoll: { value: 0 },
   };
   const material = new ShaderMaterial({
     uniforms,
@@ -202,7 +202,7 @@ const createMoon = () => {
   const mesh = new Mesh(geometry, material);
   return { 
     mesh,
-    ready,
+    uniforms: material.uniforms,
     faceCamera(camera) { mesh.quaternion.copy(camera.quaternion); }
   };
 };
@@ -238,18 +238,37 @@ const { renderer, scene, camera, run, onResize } = app;
 const water = createWater(app);
 createLighting(scene);
 scene.add(water.mesh);
-const moon = createMoon();
-moon.mesh.layers.enable(1);
-scene.add(moon.mesh);
-moon.mesh.position.set(0, .8, -1.0);
+
+const ALL_MOONS = [
+  [ 1.1517, 0.4235, -4.7558, 0.5183, 1.68, -1.00],
+  [-0.6113, 0.4685, -3.0689, 0.5410, 0.52,  2.15],
+  [ 0.5157, 0.5412, -0.6084, 0.5659, 0.00,  0.00],
+  [-0.9234, 0.4512,  0.1020, 0.4348, 2.44, -1.03],
+  [-0.1907, 0.5100,  1.8779, 0.4649, 1.02,  1.25],
+  [ 0.7784, 0.4858,  2.7939, 0.4103, 2.40, -1.90],
+  [-0.0638, 0.4962,  3.7957, 0.4022, 1.53, -1.35],
+];
+const moons = ALL_MOONS.map(([x, y, z, radius, phase, roll]) => {  
+  const moon = createMoon();
+  moon.mesh.layers.enable(1);
+  scene.add(moon.mesh);
+
+  moon.mesh.position.set(x, y, z);
+  moon.mesh.scale.setScalar(radius);
+  moon.uniforms.uPhase.value = phase;
+  moon.uniforms.uRoll.value = roll;
+
+  return moon;
+});
+
 
 const post = createPostprocessing(app);
 
-moon.ready.then(() => {
-  run((time) => {
+run((time) => {
+  moons.forEach((moon) => {
     moon.faceCamera(camera);
-    water.update(time);
-  }, () => {
-    post.render(0.2);
   });
+  water.update(time);
+}, () => {
+  post.render(0.2);
 });
