@@ -177,7 +177,9 @@ const createLighting = (scene) => {
 const createMoon = () => {
   // texture
   const textureLoader = new TextureLoader();
-  const texture = textureLoader.load(MOON_TEXTURE);
+  let resolveReady;
+  const ready = new Promise((resolve) => { resolveReady = resolve; });
+  const texture = textureLoader.load(MOON_TEXTURE, resolveReady);
   texture.colorSpace = NoColorSpace;
   texture.wrapS = RepeatWrapping;
   texture.wrapT = ClampToEdgeWrapping;
@@ -202,6 +204,7 @@ const createMoon = () => {
   const mesh = new Mesh(geometry, material);
   return { 
     mesh,
+    ready,
     uniforms: material.uniforms,
     faceCamera(camera) { mesh.quaternion.copy(camera.quaternion); }
   };
@@ -264,11 +267,13 @@ const moons = ALL_MOONS.map(([x, y, z, radius, phase, roll]) => {
 
 const post = createPostprocessing(app);
 
-run((time) => {
-  moons.forEach((moon) => {
-    moon.faceCamera(camera);
+Promise.all(moons.map((moon) => moon.ready)).then(() => {
+  run((time) => {
+    moons.forEach((moon) => {
+      moon.faceCamera(camera);
+    });
+    water.update(time);
+  }, () => {
+    post.render(0.2);
   });
-  water.update(time);
-}, () => {
-  post.render(0.2);
 });
