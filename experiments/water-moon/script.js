@@ -29,9 +29,9 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { vertex_water, fragment_water, vertex_moon, fragment_moon } from './shaders';
+import { vertex_water, fragment_water, vertex_moon, fragment_moon } from './shaders.js';
 
-const MOON_TEXTURE = 'https://i.postimg.cc/3NSNJ2Lp/moon-texture.png';
+const MOON_TEXTURE = './textures/moon-texture.png';
 
 const createApp = () => {
   const host = document.querySelector('#viewport');
