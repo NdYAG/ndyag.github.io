@@ -21,9 +21,10 @@
         min-height: 100vh;
         padding: 48px 24px;
       }
-      header { max-width: 1080px; margin: 0 auto 40px; }
+      header { max-width: 1080px; margin: 0 auto 40px; display: flex; justify-content: space-between; align-items: flex-end; }
       header h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.02em; }
       header p { color: var(--muted); margin-top: 8px; font-size: 15px; }
+      header a { color: var(--muted); }
       .grid {
         max-width: 1080px;
         margin: 0 auto;
@@ -71,8 +72,13 @@
   </head>
   <body>
     <header>
-      <h1>GLSL Experiments</h1>
-      <p>A playground where I try out ideas.</p>
+      <div>
+        <h1>GLSL Experiments</h1>
+        <p>A playground where I try out ideas.</p>
+      </div>
+      <div>
+        <a href="https://codepen.io/netizendxm" target="_blank">Step-by-step on CodePen →</a>
+      </div>
     </header>
     <main class="grid">
       <a class="card" href="./trail/">
