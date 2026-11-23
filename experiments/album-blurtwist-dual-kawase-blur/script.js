@@ -297,6 +297,9 @@ new TextureLoader().load(IMAGE_URL, (tex) => {
   tex.magFilter = LinearFilter;
   uniforms.uTexture.value = tex;
   textureLoad = true;
+  document.documentElement.classList.remove('loading');
+}, undefined, () => {
+  document.documentElement.classList.remove('loading');
 });
 
 window.addEventListener('resize', () => {

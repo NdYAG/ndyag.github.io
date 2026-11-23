@@ -87,6 +87,9 @@ const texture = new TextureLoader().load(IMAGE_URL, (tex) => {
   const h = 0.8;
   mesh.scale.set(h * imageAspect, h);
   render();
+  document.documentElement.classList.remove('loading');
+}, undefined, () => {
+  document.documentElement.classList.remove('loading');
 });
 
 // lens

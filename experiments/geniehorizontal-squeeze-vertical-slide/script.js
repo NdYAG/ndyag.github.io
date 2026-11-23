@@ -55,6 +55,9 @@ new TextureLoader().load(IMAGE_URL, (tex) => {
   const w = h * imageAspect / viewAspect;
   uniforms.uImagePos.value.set((1 - w) / 2, (1 - h) / 2);
   uniforms.uImageSize.value.set(w, h);
+  document.documentElement.classList.remove('loading');
+}, undefined, () => {
+  document.documentElement.classList.remove('loading');
 });
 
 const params = {

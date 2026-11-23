@@ -179,7 +179,7 @@ const createMoon = () => {
   const textureLoader = new TextureLoader();
   let resolveReady;
   const ready = new Promise((resolve) => { resolveReady = resolve; });
-  const texture = textureLoader.load(MOON_TEXTURE, resolveReady);
+  const texture = textureLoader.load(MOON_TEXTURE, resolveReady, undefined, resolveReady);
   texture.colorSpace = NoColorSpace;
   texture.wrapS = RepeatWrapping;
   texture.wrapT = ClampToEdgeWrapping;
@@ -268,6 +268,7 @@ const moons = ALL_MOONS.map(([x, y, z, radius, phase, roll]) => {
 const post = createPostprocessing(app);
 
 Promise.all(moons.map((moon) => moon.ready)).then(() => {
+  document.documentElement.classList.remove('loading');
   run((time) => {
     moons.forEach((moon) => {
       moon.faceCamera(camera);

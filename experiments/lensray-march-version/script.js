@@ -170,6 +170,9 @@ new TextureLoader().load(IMAGE_URL, (tex) => {
   texture = tex;
   resetSize(tex);
   render();
+  document.documentElement.classList.remove('loading');
+}, undefined, () => {
+  document.documentElement.classList.remove('loading');
 });
 
 const render = () => {
